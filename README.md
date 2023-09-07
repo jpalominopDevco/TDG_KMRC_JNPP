@@ -10,7 +10,4 @@ El proyecto tiene como objetivo facilitar la carga automatizada de datos desde a
 
 Este proyecto se distribuye bajo la licencia GNU General Public License, versión 3 (GPL-3.0).
 
-### Contacto
-
-Si tiene alguna pregunta o necesita ayuda, puede ponerse en contacto a través de [correo@ejemplo.com].
 
