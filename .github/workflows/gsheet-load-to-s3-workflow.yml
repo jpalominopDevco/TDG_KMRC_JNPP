@@ -1,0 +1,26 @@
+name: Descargar archivo de Google Drive y almacenarlo en AWS S3 Bucket
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  download:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout código fuente
+      uses: actions/checkout@v2
+
+    - name: Descargar archivo de Google Drive
+      env:
+        GOOGLE_APPLICATION_CREDENTIALS: ${{ secrets.GOOGLE_SERVICE_ACCOUNT_KEY }}
+      run: |
+        gcloud auth activate-service-account --key-file <(echo "$GOOGLE_SERVICE_ACCOUNT_KEY")
+        gsutil cp gs://docs.google.com/spreadsheets/d/13cCcKM6U_nXlFFxLmF0CUQkSSDOSZQFdJJLllK20Npw/ archivo_descargado.xlsx
+
+    - name: Mostrar contenido descargado
+      run: |
+        ls -al
+
