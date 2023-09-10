@@ -17,6 +17,8 @@ jobs:
       env:
         GOOGLE_APPLICATION_CREDENTIALS: ${{ secrets.GOOGLE_SERVICE_ACCOUNT_KEY }}
       run: |
+        echo "$GOOGLE_SERVICE_ACCOUNT_KEY" > account-key.json
+        cat account-key.json
         gcloud auth activate-service-account --key-file=<(echo "$GOOGLE_SERVICE_ACCOUNT_KEY")
         gsutil cp gs://docs.google.com/spreadsheets/d/13cCcKM6U_nXlFFxLmF0CUQkSSDOSZQFdJJLllK20Npw/ archivo_descargado.xlsx
 
