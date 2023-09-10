@@ -15,7 +15,7 @@ jobs:
 
     - name: Descarga de archivo Excel mediante wget
       run: |
-        wget --no-check-certificate -0 prueba1.xlsx "https://docs.google.com/uc?export=download&id=13cCcKM6U_nXlFFxLmF0CUQkSSDOSZQFdJJLllK20Npw"
+        wget --no-check-certificate -O prueba1.xlsx "https://docs.google.com/uc?export=download&id=13cCcKM6U_nXlFFxLmF0CUQkSSDOSZQFdJJLllK20Npw"
 
     - name: Mostrar contenido descargado
       run: |
