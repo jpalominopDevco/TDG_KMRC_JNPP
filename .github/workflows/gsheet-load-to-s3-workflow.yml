@@ -7,7 +7,7 @@ on:
 
 jobs:
   download:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-20.04
 
     steps:
     - name: Checkout código fuente
@@ -17,12 +17,15 @@ jobs:
       run: |
         wget -O employees-data-raw.xlsx https://docs.google.com/spreadsheets/d/13cCcKM6U_nXlFFxLmF0CUQkSSDOSZQFdJJLllK20Npw/edit?usp=sharing
 
-    - name: Instalar AWS CLI
-      run: |
-        curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "awscliv2.zip"
-        unzip awscliv2.zip
-        sudo ./aws/install
-      # Configurar AWS credentials utilizando secretos
+    - id: install-aws-cli
+      uses: unfor19/install-aws-cli-action@v1
+      with:
+        version: 2
+        verbose: false
+        arch: amd64
+        rootdir: ""
+        workdir: ""
+
     - name: Configurar credenciales de AWS
       run: |
         aws configure set aws_access_key_id ${{ secrets.AWS_ACCESS_KEY_ID }}
