@@ -18,6 +18,5 @@ jobs:
         GOOGLE_APPLICATION_CREDENTIALS: ${{ secrets.GOOGLE_SERVICE_ACCOUNT_KEY }}
       run: |
         echo "$GOOGLE_SERVICE_ACCOUNT_KEY" > account-key.json
-        cat account-key.json
 
 
