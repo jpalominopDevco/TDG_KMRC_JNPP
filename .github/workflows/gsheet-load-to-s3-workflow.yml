@@ -13,16 +13,9 @@ jobs:
     - name: Checkout código fuente
       uses: actions/checkout@v2
 
-    - name: Configurar credenciales de cuenta de servicio
-      env:
-        GOOGLE_APPLICATION_CREDENTIALS: ${{ secrets.GOOGLE_SERVICE_ACCOUNT_KEY }}
+    - name: Descarga de archivo Excel mediante wget
       run: |
-        echo "$GOOGLE_SERVICE_ACCOUNT_KEY" > key.json
-        export GOOGLE_APPLICATION_CREDENTIALS=$(pwd)/key.json
-
-    - name: Descargar archivo de Google Drive
-      run: |
-        gsutil cp gs://docs.google.com/spreadsheets/d/13cCcKM6U_nXlFFxLmF0CUQkSSDOSZQFdJJLllK20Npw/ archivo_descargado.xlsx
+        wget --no-check-certificate -0 prueba1.xlsx "https://docs.google.com/uc?export=download&id=13cCcKM6U_nXlFFxLmF0CUQkSSDOSZQFdJJLllK20Npw"
 
     - name: Mostrar contenido descargado
       run: |
