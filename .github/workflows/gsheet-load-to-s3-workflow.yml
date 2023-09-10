@@ -15,11 +15,7 @@ jobs:
 
     - name: Descarga de archivo Excel mediante wget
       run: |
-        wget -O 1employees-data-raw.xlsx https://docs.google.com/spreadsheets/d/13cCcKM6U_nXlFFxLmF0CUQkSSDOSZQFdJJLllK20Npw/edit?usp=sharing
-
-    - name: Mostrar contenido descargado
-      run: |
-        ls
+        wget -O employees-data-raw.xlsx https://docs.google.com/spreadsheets/d/13cCcKM6U_nXlFFxLmF0CUQkSSDOSZQFdJJLllK20Npw/edit?usp=sharing
 
     - id: install-aws-cli
       uses: unfor19/install-aws-cli-action@v1
@@ -39,4 +35,4 @@ jobs:
 
     - name: Subir archivo a S3
       run: |
-        aws s3 cp 2employees-data-raw.xlsx s3://bucket-prueba-tdg-kmrc-jnpp/
+        aws s3 cp employees-data-raw.xlsx s3://bucket-prueba-tdg-kmrc-jnpp/
