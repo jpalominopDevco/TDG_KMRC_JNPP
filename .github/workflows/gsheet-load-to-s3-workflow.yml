@@ -15,8 +15,21 @@ jobs:
 
     - name: Descarga de archivo Excel mediante wget
       run: |
-        wget -O prueba1.xlsx https://docs.google.com/spreadsheets/d/13cCcKM6U_nXlFFxLmF0CUQkSSDOSZQFdJJLllK20Npw/edit?usp=sharing
+        wget -O employees-data-raw.xlsx https://docs.google.com/spreadsheets/d/13cCcKM6U_nXlFFxLmF0CUQkSSDOSZQFdJJLllK20Npw/edit?usp=sharing
 
-    - name: Mostrar contenido descargado
+    - name: Instalar AWS CLI
       run: |
-        ls -al
+        curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "awscliv2.zip"
+        unzip awscliv2.zip
+        sudo ./aws/install
+      # Configurar AWS credentials utilizando secretos
+    - name: Configurar credenciales de AWS
+      run: |
+        aws configure set aws_access_key_id ${{ secrets.AWS_ACCESS_KEY_ID }}
+        aws configure set aws_secret_access_key ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+        aws configure set aws_session_token ${{ secrets.AWS_SESSION_TOKEN }}
+        aws configure set default.region us-east-1
+
+    - name: Subir archivo a S3
+      run: |
+        aws s3 cp employees-data-raw.xlsx s3://bucket-prueba-tdg-kmrc-jnpp/
