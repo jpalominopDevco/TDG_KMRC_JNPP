@@ -13,10 +13,17 @@ jobs:
     - name: Checkout código fuente
       uses: actions/checkout@v2
 
-    - name: Descargar archivo de Google Drive
+    - name: Configurar credenciales de cuenta de servicio
       env:
         GOOGLE_APPLICATION_CREDENTIALS: ${{ secrets.GOOGLE_SERVICE_ACCOUNT_KEY }}
       run: |
-        echo "$GOOGLE_SERVICE_ACCOUNT_KEY" > account-key.json
+        echo "$GOOGLE_SERVICE_ACCOUNT_KEY" > key.json
+        export GOOGLE_APPLICATION_CREDENTIALS=$(pwd)/key.json
 
+    - name: Descargar archivo de Google Drive
+      run: |
+        gsutil cp gs://docs.google.com/spreadsheets/d/13cCcKM6U_nXlFFxLmF0CUQkSSDOSZQFdJJLllK20Npw/ archivo_descargado.xlsx
 
+    - name: Mostrar contenido descargado
+      run: |
+        ls -al
