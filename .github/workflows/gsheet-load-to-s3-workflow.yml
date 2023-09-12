@@ -16,13 +16,14 @@ jobs:
     - name: Descarga de dependencias de Python
       run: |
         pip install -r requirements.txt
-
+        pwd
 
     - name: Descarga de archivo Excel mediante Google Drive API
       env:
         CREDENTIALS_JSON: ${{ secrets.GOOGLE_SERVICE_ACCOUNT_KEY }}
       run: |
         echo "$CREDENTIALS_JSON" > $HOME/Desktop/service_account_credentials.json
+        pwd
         python download_file.py
 
     - id: install-aws-cli
