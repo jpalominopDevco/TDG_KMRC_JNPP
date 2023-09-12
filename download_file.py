@@ -1,23 +1,9 @@
 import os
-import json
 from google.oauth2 import service_account
 from googleapiclient.discovery import build
 
-# Accede a la variable de entorno
-credentials_json = os.getenv('CREDENTIALS_JSON')
-
-if credentials_json is None:
-    raise Exception("La variable de entorno CREDENTIALS_JSON no está configurada.")
-
-# Puedes imprimir las credenciales para verificar que se hayan cargado correctamente
-print("Credenciales JSON:")
-print(credentials_json)
-
-# Ahora puedes cargar las credenciales JSON como un diccionario
-credentials = json.loads(credentials_json)
-
 # Ruta al archivo JSON de las credenciales de cuenta de servicio
-credentials_path = credentials
+credentials_path = '$HOME/Desktop/service_account_credentials.json'
 
 # ID del archivo de Google Drive
 file_id = '13cCcKM6U_nXlFFxLmF0CUQkSSDOSZQFdJJLllK20Npw'

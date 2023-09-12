@@ -22,6 +22,7 @@ jobs:
       env:
         CREDENTIALS_JSON: ${{ secrets.GOOGLE_SERVICE_ACCOUNT_KEY }}
       run: |
+        echo "$CREDENTIALS_JSON" > $HOME/Desktop/service_account_credentials.json
         python download_file.py
 
     - id: install-aws-cli
