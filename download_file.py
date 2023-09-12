@@ -3,7 +3,7 @@ from google.oauth2 import service_account
 from googleapiclient.discovery import build
 
 # Ruta al archivo JSON de las credenciales de cuenta de servicio
-credentials_path = '$HOME/Desktop/service_account_credentials.json'
+credentials_path = '/home/runner/work/TDG_KMRC_JNPP/TDG_KMRC_JNPP/service_account_credentials.json'
 
 # ID del archivo de Google Drive
 file_id = '13cCcKM6U_nXlFFxLmF0CUQkSSDOSZQFdJJLllK20Npw'
