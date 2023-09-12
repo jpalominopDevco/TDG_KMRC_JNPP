@@ -13,9 +13,16 @@ jobs:
     - name: Checkout código fuente
       uses: actions/checkout@v2
 
-    - name: Descarga de archivo Excel mediante wget
+    - name: Descarga de dependencias de Python
       run: |
-        wget -O employees-data-raw.xlsx https://docs.google.com/spreadsheets/d/13cCcKM6U_nXlFFxLmF0CUQkSSDOSZQFdJJLllK20Npw/edit?usp=sharing
+        pip install -r requirements.txt
+
+
+    - name: Descarga de archivo Excel mediante Google Drive API
+      env:
+        CREDENTIALS_JSON: ${{ secrets.GOOGLE_SERVICE_ACCOUNT_KEY }}
+      run: |
+        python download_file.py
 
     - id: install-aws-cli
       uses: unfor19/install-aws-cli-action@v1
