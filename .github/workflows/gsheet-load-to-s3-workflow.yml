@@ -1,4 +1,4 @@
-name: Descargar archivo de Google Drive y almacenarlo en AWS S3 Bucket
+name: Downloads a Google Spreadsheet file and saves it in an AWS S3 Bucket
 
 on:
   push:
@@ -10,23 +10,22 @@ jobs:
     runs-on: ubuntu-20.04
 
     steps:
-    - name: Checkout código fuente
+    - name: Checkout source code
       uses: actions/checkout@v4
 
-    - name: Descarga de dependencias de Python
+    - name: Downloads Python dependencies
       run: |
         pip install -r requirements.txt
         pwd
         ls -a
 
-    - name: Descarga de archivo Excel mediante Google Drive API
+    - name: Downloads the Spreadsheet file using Google Drive API
       env:
         CREDENTIALS_JSON: ${{ secrets.GOOGLE_SERVICE_ACCOUNT_KEY }}
         REPOSITORY_NAME: ${{ vars.REPOSITORY_NAME }}
+        FILE_ID: ${{ secrets.GOOGLE_DRIVE_FILE_ID }}
       run: |
         echo "$CREDENTIALS_JSON" > /home/runner/work/${{ vars.REPOSITORY_NAME }}/${{ vars.REPOSITORY_NAME }}/service_account_credentials.json
-        pwd
-        ls -a
         python download_file.py
 
     - id: install-aws-cli
@@ -38,13 +37,13 @@ jobs:
         rootdir: ""
         workdir: ""
 
-    - name: Configurar credenciales de AWS
+    - name: AWS credentials configuration
       run: |
         aws configure set aws_access_key_id ${{ secrets.AWS_ACCESS_KEY_ID }}
         aws configure set aws_secret_access_key ${{ secrets.AWS_SECRET_ACCESS_KEY }}
         aws configure set aws_session_token ${{ secrets.AWS_SESSION_TOKEN }}
         aws configure set default.region us-east-1
 
-    - name: Subir archivo a S3
+    - name: Uploads the Spreadsheet to the S3 Bucket
       run: |
-        aws s3 cp employees-data-raw2.xlsx s3://bucket-prueba-tdg-kmrc-jnpp/
+        aws s3 cp employees-raw-data.xlsx s3://bucket-prueba-tdg-kmrc-jnpp/

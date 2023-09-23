@@ -2,31 +2,31 @@ import os
 from google.oauth2 import service_account
 from googleapiclient.discovery import build
 
-#Capturar nombre del repositorio desde GitHub Actions
-nombre_repositorio = os.environ.get("REPOSITORY_NAME")
+# Obtains the repository name from GitHub Actions
+repository_name = os.environ.get("REPOSITORY_NAME")
 
-# Ruta al archivo JSON de las credenciales de cuenta de servicio
-credentials_path = '/home/runner/work/' + nombre_repositorio + '/' + nombre_repositorio + '/service_account_credentials.json'
+# Route of service account credentials JSON file
+credentials_path = '/home/runner/work/' + repository_name + '/' + repository_name + '/service_account_credentials.json'
 
-# ID del archivo de Google Drive
-file_id = '13cCcKM6U_nXlFFxLmF0CUQkSSDOSZQFdJJLllK20Npw'
+# Google Drive file ID
+file_id = os.environ.get("FILE_ID")
 
-# Nombre de archivo de destino para guardar el spreadsheet
-output_file = 'employees-data-raw2.xlsx'
+# Destination file name for saving the spreadsheet
+output_file = 'employees-raw-data.xlsx'
 
-# Autenticación con las credenciales de cuenta de servicio
+# Authentication using the service account credentials file
 credentials = service_account.Credentials.from_service_account_file(
     credentials_path, scopes=['https://www.googleapis.com/auth/drive.readonly']
 )
 
-# Crea una instancia del servicio de Google Drive
+# Create a Google Drive service instance
 drive_service = build('drive', 'v3', credentials=credentials)
 
-# Descarga el archivo
+# Downloads the file
 request = drive_service.files().export_media(fileId=file_id, mimeType='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet')
 
-# Guarda el archivo en disco
+# Saves the file in disk
 with open(output_file, 'wb') as file:
     file.write(request.execute())
 
-print(f"El archivo '{output_file}' se ha descargado correctamente.")
+print(f"The file '{output_file}' has been downloaded succesfully.")
