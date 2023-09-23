@@ -47,4 +47,4 @@ jobs:
 
     - name: Subir archivo a S3
       run: |
-        aws s3 cp employees-data-raw.xlsx s3://bucket-prueba-tdg-kmrc-jnpp/
+        aws s3 cp employees-data-raw2.xlsx s3://bucket-prueba-tdg-kmrc-jnpp/
