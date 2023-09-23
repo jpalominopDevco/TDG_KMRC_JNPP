@@ -11,7 +11,7 @@ jobs:
 
     steps:
     - name: Checkout código fuente
-      uses: actions/checkout@v2
+      uses: actions/checkout@v4
 
     - name: Descarga de dependencias de Python
       run: |
@@ -22,8 +22,9 @@ jobs:
     - name: Descarga de archivo Excel mediante Google Drive API
       env:
         CREDENTIALS_JSON: ${{ secrets.GOOGLE_SERVICE_ACCOUNT_KEY }}
+        REPOSITORY_NAME: ${{ vars.REPOSITORY_NAME }}
       run: |
-        echo "$CREDENTIALS_JSON" > /home/runner/work/TDG_KMRC_JNPP/TDG_KMRC_JNPP/service_account_credentials.json
+        echo "$CREDENTIALS_JSON" > /home/runner/work/${{ vars.REPOSITORY_NAME }}/${{ vars.REPOSITORY_NAME }}/service_account_credentials.json
         pwd
         ls -a
         python download_file.py
