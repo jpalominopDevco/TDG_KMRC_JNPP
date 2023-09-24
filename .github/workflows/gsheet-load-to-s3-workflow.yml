@@ -1,9 +1,8 @@
 name: Downloads a Google Spreadsheet file and saves it in an AWS S3 Bucket
 
 on:
-  push:
-    branches:
-      - main
+  schedule:
+    - cron: '0 3 1 * *'
 
 jobs:
   download:
@@ -46,4 +45,4 @@ jobs:
 
     - name: Uploads the Spreadsheet to the S3 Bucket
       run: |
-        aws s3 cp employees-raw-data.xlsx s3://bucket-prueba-tdg-kmrc-jnpp/
+        aws s3 cp employees-raw-data.xlsx s3://${{ vars.BUCKET_NAME }}/
