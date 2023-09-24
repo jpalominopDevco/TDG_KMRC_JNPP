@@ -3,6 +3,7 @@ name: Downloads a Google Spreadsheet file and saves it in an AWS S3 Bucket
 on:
   schedule:
     - cron: '0 3 1 * *'
+  workflow_dispatch:
 
 jobs:
   download:
@@ -12,13 +13,13 @@ jobs:
     - name: Checkout source code
       uses: actions/checkout@v4
 
-    - name: Downloads Python dependencies
+    - name: Download Python dependencies
       run: |
         pip install -r requirements.txt
         pwd
         ls -a
 
-    - name: Downloads the Spreadsheet file using Google Drive API
+    - name: Download the Spreadsheet file using Google Drive API
       env:
         CREDENTIALS_JSON: ${{ secrets.GOOGLE_SERVICE_ACCOUNT_KEY }}
         REPOSITORY_NAME: ${{ vars.REPOSITORY_NAME }}
@@ -43,6 +44,6 @@ jobs:
         aws configure set aws_session_token ${{ secrets.AWS_SESSION_TOKEN }}
         aws configure set default.region us-east-1
 
-    - name: Uploads the Spreadsheet to the S3 Bucket
+    - name: Upload the Spreadsheet to the S3 Bucket
       run: |
         aws s3 cp employees-raw-data.xlsx s3://${{ vars.BUCKET_NAME }}/
