@@ -15,18 +15,18 @@ jobs:
 
     - name: Download Python dependencies
       run: |
-        pip install -r requirements.txt
+        pip install -r spreadsheet-download-script/requirements.txt
         pwd
         ls -a
 
-    - name: Download the Spreadsheet file using Google Drive API
+    - name: Download the Google Spreadsheet file using Google Drive API
       env:
         CREDENTIALS_JSON: ${{ secrets.GOOGLE_SERVICE_ACCOUNT_KEY }}
         REPOSITORY_NAME: ${{ vars.REPOSITORY_NAME }}
         FILE_ID: ${{ secrets.GOOGLE_DRIVE_FILE_ID }}
       run: |
         echo "$CREDENTIALS_JSON" > /home/runner/work/${{ vars.REPOSITORY_NAME }}/${{ vars.REPOSITORY_NAME }}/service_account_credentials.json
-        python download_file.py
+        python spreadsheet-download-script/download-spreadsheet-file.py
 
     - id: install-aws-cli
       uses: unfor19/install-aws-cli-action@v1
