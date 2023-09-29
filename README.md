@@ -1,26 +1,26 @@
-# Proyecto de Integración de Excel a QuickSight
+# Excel to QuickSight Integration Project
 
-[![Descargar y cargar un archivo de Google Spreadsheet en un Bucket de AWS S3](https://github.com/jpalominopDevco/staff-assessment-formatting-and-integration/actions/workflows/spreadsheet-load-to-s3-workflow.yml/badge.svg?branch=main)](https://github.com/jpalominopDevco/staff-assessment-formatting-and-integration/actions/workflows/spreadsheet-load-to-s3-workflow.yml)
+[![Download and load a Google Spreadsheet file into an AWS S3 Bucket](https://github.com/jpalominopDevco/staff-assessment-formatting-and-integration/actions/workflows/spreadsheet-load-to-s3-workflow.yml/badge.svg?branch=main)](https://github.com/jpalominopDevco/staff-assessment-formatting-and-integration/actions/workflows/spreadsheet-load-to-s3-workflow.yml)
 
-Este repositorio contiene el código y la documentación de un proyecto de grado desarrollado en el Politécnico Jaime Isaza Cadavid. El objetivo principal de este proyecto es simplificar la carga de datos desde archivos de Excel a QuickSight utilizando prácticas de DevOps y Cloud Engineering.
+This repository contains the code and documentation for a grade project developed at the Jaime Isaza Cadavid Polytechnic. The main goal of this project is to simplify the process of loading data from Excel files into QuickSight using DevOps and Cloud Engineering practices.
 
-## Descripción del Proyecto
+## Project Description
 
-El proyecto se centra en la automatización de la carga de datos desde archivos de Excel a QuickSight. Esta automatización tiene como objetivo agilizar el proceso y reducir la posibilidad de errores en la visualización y análisis de datos en QuickSight. El flujo de trabajo general implica descargar archivos desde Google Spreadsheet, guardarlos en un bucket de AWS S3 y formatear los datos para su integración en QuickSight.
+The project focuses on automating the data loading process from Excel files into QuickSight. This automation aims to streamline the process and reduce the possibility of errors in data visualization and analysis in QuickSight. The general workflow involves downloading files from Google Spreadsheet, saving them to an AWS S3 bucket, and formatting the data for integration into QuickSight.
 
-## Tecnologías Implementadas
+## Implemented Technologies
 
-El proyecto hace uso de las siguientes tecnologías:
+The project makes use of the following technologies:
 
-- **Ubuntu 20.04**: Este sistema operativo se utiliza en el flujo de trabajo de GitHub Actions para automatizar tareas.
-- **Python 3.11.5**: Se emplea como lenguaje principal para el desarrollo de las Lambdas y los scripts destinados al manejo de las hojas de cálculo.
+- **Ubuntu 20.04**: This operating system is used in the GitHub Actions workflow for task automation.
+- **Python 3.11.5**: It is the primary language used for developing Lambdas and scripts for handling spreadsheets.
 
-## Licencia
+## License
 
-Este proyecto se distribuye bajo los términos de la Licencia Pública General de GNU, versión 3 (GPL-3.0).
+This project is distributed under the terms of the GNU General Public License, version 3 (GPL-3.0).
 
-### Uso Exclusivo para Uso Privado
+### Private Use Only
 
-Copyright (C) Devcognitio S.A.S - Todos los derechos reservados.
+Copyright (C) Devcognitio S.A.S - All rights reserved.
 
-La copia no autorizada de este proyecto o cualquier archivo contenido en él, por cualquier medio, está estrictamente prohibida. Este proyecto es de naturaleza confidencial y propietaria.
+Unauthorized copying of this project or any file contained within it, by any means, is strictly prohibited. This project is of a confidential and proprietary nature.
