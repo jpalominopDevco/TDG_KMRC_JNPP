@@ -14,8 +14,8 @@ El proyecto tiene como objetivo facilitar la carga automatizada de datos desde a
 ## Licencia
 Este proyecto se distribuye bajo la licencia GNU General Public License, versión 3 (GPL-3.0).
 ### Private Use Only
-/* Copyright (C) Devcognitio S.A.S - All Rights Reserved
- * Unauthorized copying of this project or any file in it, via any medium is strictly prohibited
- * Proprietary and confidential
- */
+Copyright (C) Devcognitio S.A.S - All Rights Reserved
+Unauthorized copying of this project or any file in it, via any medium is strictly prohibited
+Proprietary and confidential
+
 
