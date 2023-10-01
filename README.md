@@ -2,7 +2,7 @@
 
 [![Download and load a Google Spreadsheet file into an AWS S3 Bucket](https://github.com/jpalominopDevco/staff-assessment-formatting-and-integration/actions/workflows/spreadsheet-load-to-s3-workflow.yml/badge.svg?branch=main)](https://github.com/jpalominopDevco/staff-assessment-formatting-and-integration/actions/workflows/spreadsheet-load-to-s3-workflow.yml)
 
-This repository contains the code and documentation for a grade project developed at the Jaime Isaza Cadavid Polytechnic. The main goal of this project is to simplify the process of loading data from Excel files into QuickSight using DevOps and Cloud Engineering practices.
+This repository contains the code and documentation for a grade project developed at the Jaime Isaza Cadavid Polytechnic. The main goal of this project is to simplify the process of loading data from Excel files into QuickSight using DevSecOps and Cloud Engineering practices.
 
 ## Project Description
 
