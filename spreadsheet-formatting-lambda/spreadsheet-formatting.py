@@ -5,21 +5,10 @@ spreadsheet_route = 'FOR-PS-03.xlsx'
 
 workbook = load_workbook(spreadsheet_route)
 
-worksheet = workbook['Detalle']
+if 'Datos' in workbook.sheetnames:
+    workbook.remove(workbook['Datos'])
 
-# worksheet['A1'].value = 'Timestamp'
-# worksheet['B1'].value = 'Guia de seguimiento'
-# worksheet['C1'].value = 'Devcognita evaluado'
-# worksheet['D1'].value = 'Fecha del seguimiento'
-# worksheet['E1'].value = 'Avance al plan de formacion'
-# worksheet['F1'].value = 'Proactividad en el estudio'
-# worksheet['G1'].value = 'Comunicacion en la sesion'
-# worksheet['H1'].value = 'Desarrollo de acuerdos pendientes del seguimiento anterior'
-# worksheet['I1'].value = 'Fit con el seniority'
-# worksheet['J1'].value = 'Evolucion tecnica'
-# worksheet['K1'].value = 'Capacidad recursiva y de investigacion'
-# worksheet['L1'].value = 'Observaciones'
-# worksheet['M1'].value = 'Promedio'
+worksheet = workbook['Detalle']
 
 headers = [
     'Timestamp',
@@ -40,18 +29,29 @@ headers = [
 for column, header in zip(worksheet.iter_cols(min_row=1, max_row=1, max_col=len(headers)), headers):
     column[0].value = header
 
-for row in worksheet.iter_rows(min_row=2, min_col=3, max_col=4):
-    cell_c = row[0]
+current_row = 2
+for row in worksheet.iter_rows(min_row=2, min_col=1, max_col=13):
+    cell_c = row[2]
+    cell_d = row[3]
+    cell_m = row[12]
+
     if cell_c.value is not None:
         cell_c_coordinate = cell_c.coordinate
         if cell_c_coordinate != 'C1':
             worksheet[cell_c_coordinate] = cell_c.value.strip()
+    else:
+        break
 
-    cell_d = row[1]
     if cell_d.value is not None:
         cell_d_coordinate = cell_d.coordinate
         if cell_d_coordinate != 'D1':
             worksheet[cell_d_coordinate].number_format = 'mm/dd/yyyy'
+
+    if cell_c.value is not None:
+        cell_m_coordinate = cell_m.coordinate
+        if cell_m_coordinate != 'M1':
+            worksheet[cell_m_coordinate] = f"=AVERAGE(E{current_row}:K{current_row})"
+            current_row += 1
 
 workbook.save('FOR-PS-03.xlsx')
 workbook.close()
