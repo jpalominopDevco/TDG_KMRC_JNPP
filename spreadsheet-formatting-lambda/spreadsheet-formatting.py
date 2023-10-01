@@ -40,12 +40,18 @@ headers = [
 for column, header in zip(worksheet.iter_cols(min_row=1, max_row=1, max_col=len(headers)), headers):
     column[0].value = header
 
-for row in worksheet.iter_rows(min_row=2, min_col=3, max_col=3):
-    cell = row[0]
-    if cell.value is not None:
-        cell_coordinate = cell.coordinate
-        if cell_coordinate != 'C1':
-            worksheet[cell_coordinate] = cell.value.strip()
+for row in worksheet.iter_rows(min_row=2, min_col=3, max_col=4):
+    cell_c = row[0]
+    if cell_c.value is not None:
+        cell_c_coordinate = cell_c.coordinate
+        if cell_c_coordinate != 'C1':
+            worksheet[cell_c_coordinate] = cell_c.value.strip()
+
+    cell_d = row[1]
+    if cell_d.value is not None:
+        cell_d_coordinate = cell_d.coordinate
+        if cell_d_coordinate != 'D1':
+            worksheet[cell_d_coordinate].number_format = 'mm/dd/yyyy'
 
 workbook.save('FOR-PS-03.xlsx')
 workbook.close()
