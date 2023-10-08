@@ -13,7 +13,7 @@ The project focuses on automating the data loading process from Excel files into
 The project makes use of the following technologies:
 
 - **Ubuntu 20.04**: This operating system is used in the GitHub Actions workflow for task automation.
-- **Python 3.11.5**: It is the primary language used for developing Lambdas and scripts for handling spreadsheets.
+- **Python 3.10**: It is the primary language used for developing Lambdas and scripts for handling spreadsheets.
 
 ## License
 
