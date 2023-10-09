@@ -4,13 +4,14 @@ from googleapiclient.discovery import build
 
 def run():
     # Obtains the repository name from GitHub Actions
-    repository_name = os.environ.get("REPOSITORY_NAME")
+    # repository_name = os.environ.get("REPOSITORY_NAME")
 
     # Route of service account credentials JSON file
-    credentials_path = '/home/runner/work/' + repository_name + '/' + repository_name + '/service_account_credentials.json'
+    # credentials_path = '/home/runner/work/' + repository_name + '/' + repository_name + '/service_account_credentials.json'
+    credentials_path = './service_account_credentials.json'
 
     # Google Drive file ID
-    file_id = os.environ.get("FILE_ID")
+    file_id = '13cCcKM6U_nXlFFxLmF0CUQkSSDOSZQFdJJLllK20Npw'
 
     # Destination file name for saving the spreadsheet
     output_file = 'employees-raw-data.xlsx'
@@ -30,4 +31,6 @@ def run():
     with open(output_file, 'wb') as file:
         file.write(request.execute())
 
-    return(print(f"The file '{output_file}' has been downloaded succesfully."))
+    print(f"The file '{output_file}' has been downloaded succesfully.")
+
+run()
