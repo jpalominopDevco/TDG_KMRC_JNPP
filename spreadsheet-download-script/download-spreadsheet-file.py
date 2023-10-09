@@ -31,7 +31,6 @@ def run():
     with open(output_file, 'wb') as file:
         file.write(request.execute())
 
-    print(f"The file '{output_file}' has been downloaded succesfully.")
+    return(print(f"The file '{output_file}' has been downloaded succesfully."))
 
-#Prueba
 run()
