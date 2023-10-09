@@ -1,8 +1,16 @@
 import os
 # from google.oauth2 import service_account
 # from googleapiclient.discovery import build
+import datetime
+import logging
 
-def run():
+logger = logging.getLogger(__name__)
+logger.setLevel(logging.INFO)
+
+def run(event, context):
+    current_time = datetime.datetime.now().time()
+    name = context.function_name
+    logger.info("Your cron function " + name + " ran at " + str(current_time))
     # Obtains the repository name from GitHub Actions
     # repository_name = os.environ.get("REPOSITORY_NAME")
 
@@ -33,7 +41,3 @@ def run():
 
     # return(print(f"The file '{output_file}' has been downloaded succesfully."))]
     return(print("The file has been downloaded succesfully."))
-
-
-
-run()
