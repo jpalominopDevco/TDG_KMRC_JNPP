@@ -1,16 +1,9 @@
 import os
+import boto3
 # from google.oauth2 import service_account
 # from googleapiclient.discovery import build
-import datetime
-import logging
-
-logger = logging.getLogger(__name__)
-logger.setLevel(logging.INFO)
 
 def run(event, context):
-    current_time = datetime.datetime.now().time()
-    name = context.function_name
-    logger.info("Your cron function " + name + " ran at " + str(current_time))
     # Obtains the repository name from GitHub Actions
     # repository_name = os.environ.get("REPOSITORY_NAME")
 
@@ -40,4 +33,17 @@ def run(event, context):
     #     file.write(request.execute())
 
     # return(print(f"The file '{output_file}' has been downloaded succesfully."))]
-    return(print("The file has been downloaded succesfully."))
+
+    local_file_path = "./spreadsheet_download_lambda/hola.txt"
+
+    s3_key = "holaCambiado.txt"
+
+    s3_client = boto3.client('s3')
+
+    try:
+        s3_client.upload_file(local_file_path, 'bucket-prueba-tdg-kmrc-jnpp', s3_key)
+        return(print("Archivo subido con éxito a S3"))
+    except Exception as e:
+        return(print(f"Error al subir el archivo a S3: {str(e)}"))
+
+    # return(print("The file has been downloaded succesfully."))
