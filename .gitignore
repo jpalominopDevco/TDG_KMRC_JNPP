@@ -80,3 +80,9 @@ pip-log.txt
 # Pip local storage folder
 .cache/
 pip-wheel-metadata/
+
+# Excel Files
+*.xlsx
+*.xls
+*.xlsm
+*.xlsb

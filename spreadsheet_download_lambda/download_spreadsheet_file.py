@@ -28,13 +28,17 @@ def run(event, context):
     # Downloads the file
     request = drive_service.files().export_media(fileId=file_id, mimeType='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet')
 
+    # Guardar el archivo en el mismo directorio que el script de Python
+    script_directory = os.path.dirname(os.path.abspath(__file__))
+    output_file_path = os.path.join(script_directory, output_file)
+
     # Saves the file in disk
-    with open(output_file, 'wb') as file:
+    with open(output_file_path, 'wb') as file:
         file.write(request.execute())
 
-    print(f"The file '{output_file}' has been downloaded succesfully.")
+    print(f"The file '{output_file}' has been downloaded successfully.")
 
-    local_file_path = "./employees-raw-data.xlsx"
+    local_file_path = "./spreadsheet_download_lambda/employees-raw-data.xlsx"
 
     s3_key = "employees-raw-data.xlsx"
 
@@ -45,3 +49,4 @@ def run(event, context):
         return(print("Archivo subido con éxito a S3"))
     except Exception as e:
         return(print(f"Error al subir el archivo a S3: {str(e)}"))
+
