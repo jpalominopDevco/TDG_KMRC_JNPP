@@ -1,0 +1,17 @@
+service: staff-assesment-service
+
+frameworkVersion: '3'
+
+provider:
+  name: aws
+  runtime: python3.10
+  region: us-east-1
+  stage: dev
+
+functions:
+  downloadSpreadsheetFile:
+    name: ${sls:stage}-downloadSpreadsheetFile
+    handler: spreadsheet_download_lambda/download_spreadsheet_file.run
+    events:
+      # Invoke Lambda function every 2nd minute from Mon-Fri
+      - schedule: cron(0/2 * ? * MON-FRI *)
