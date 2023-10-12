@@ -1,9 +1,20 @@
 #import os
 import boto3
+import json
 #from google.oauth2 import service_account
 #from googleapiclient.discovery import build
 
 def run(event, context):
+
+    #Google Drive file ID
+    #Get secret value from file id
+    secret = get_secret("StaffAssessmentSMDrive")
+    file_id = extract_json_value(secret, "file_id")
+
+    print(secret)
+    print(file_id)
+
+
     # Obtains the repository name from GitHub Actions
     # repository_name = os.environ.get("REPOSITORY_NAME")
 
@@ -54,3 +65,26 @@ def run(event, context):
     except Exception as e:
         return(print(f"Error al subir el archivo a S3: {str(e)}"))
     
+def get_secret(secret_name):
+
+    # Create a Secrets Manager client
+    session = boto3.session.Session()
+    client = session.client(
+        service_name='secretsmanager',
+        region_name="us-east-1"
+    )
+
+    #Get the value of the secret
+    get_secret_value_response = client.get_secret_value(
+        SecretId=secret_name
+    )
+
+    secret = get_secret_value_response['SecretString']
+
+    return secret
+
+def extract_json_value(json,dato):
+
+    data = json.loads(json)
+
+    return data[dato]
