@@ -86,3 +86,5 @@ pip-wheel-metadata/
 *.xls
 *.xlsm
 *.xlsb
+
+*.json

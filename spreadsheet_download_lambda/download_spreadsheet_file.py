@@ -1,80 +1,84 @@
-#import os
+import os
 import boto3
 import json
-#from google.oauth2 import service_account
-#from googleapiclient.discovery import build
+from google.oauth2 import service_account
+from googleapiclient.discovery import build
 
 def run(event, context):
+    # Identificador del archivo en Google Drive
+    # Obtener el valor secreto a partir del ID del archivo
+    secret_file = get_secret("StaffAssessmentSMDrive")
+    file_id = extract_json_value(secret_file, "file_id")
 
-    #Google Drive file ID
-    #Get secret value from file id
-    secret = get_secret("StaffAssessmentSMDrive")
-    file_id = extract_json_value(secret, "file_id")
-
-    print(secret)
+    print(secret_file)
     print(file_id)
 
-
-    # Obtains the repository name from GitHub Actions
+    # Obtiene el nombre del repositorio de GitHub Actions
     # repository_name = os.environ.get("REPOSITORY_NAME")
 
-    # Route of service account credentials JSON file
-    # credentials_path = '/home/runner/work/' + repository_name + '/' + repository_name + '/service_account_credentials.json'
-    #credentials_path = './spreadsheet_download_lambda/service_account_credentials.json'
+    secret_credentials = json.loads(get_secret("StaffAssessmentSMAccountCredentials"))
+    print(secret_credentials)
 
-    # Google Drive file ID
-    #file_id = '13cCcKM6U_nXlFFxLmF0CUQkSSDOSZQFdJJLllK20Npw'
+    with open("./spreadsheet_download_lambda/service_account_credentials.json", "w") as archivo:
+        # Escribe los datos JSON en el archivo
+        json.dump(secret_credentials, archivo, indent=2)
 
-    # Destination file name for saving the spreadsheet
-    #output_file = 'employees-raw-data.xlsx'
+    # Ruta del archivo JSON de credenciales de la cuenta de servicio
+    credentials_path = './spreadsheet_download_lambda/service_account_credentials.json'
+    # credentials_path = './service_account_credentials.json'
 
-    # Authentication using the service account credentials file
-    #credentials = service_account.Credentials.from_service_account_file(
-    #    credentials_path, scopes=['https://www.googleapis.com/auth/drive.readonly']
-    #)
+    # Nombre del archivo de destino para guardar la hoja de cálculo
+    output_file = 'employees-raw-data.xlsx'
 
-    # Create a Google Drive service instance
-    #drive_service = build('drive', 'v3', credentials=credentials)
+    # Autenticación utilizando el archivo de credenciales de la cuenta de servicio
+    credentials = service_account.Credentials.from_service_account_file(
+        credentials_path, scopes=['https://www.googleapis.com/auth/drive.readonly']
+    )
 
-    # Downloads the file
-    #request = drive_service.files().export_media(fileId=file_id, mimeType='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet')
+    # Crea una instancia del servicio de Google Drive
+    drive_service = build('drive', 'v3', credentials=credentials)
 
-    # Guardar el archivo en el mismo directorio que el script de Python
-    #script_directory = os.path.dirname(os.path.abspath(__file__))
-    #output_file_path = os.path.join(script_directory, output_file)
+    # Descarga el archivo
+    request = drive_service.files().export_media(fileId=file_id, mimeType='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet')
 
-    # Saves the file in disk
-    #with open(output_file_path, 'wb') as file:
-    #    file.write(request.execute())
+    # Guarda el archivo en el mismo directorio que el script de Python
+    script_directory = os.path.dirname(os.path.abspath(__file__))
+    output_file_path = os.path.join(script_directory, output_file)
 
-    #print(f"The file '{output_file}' has been downloaded successfully.")
+    # Guarda el archivo en el disco
+    with open(output_file_path, 'wb') as file:
+        file.write(request.execute())
 
-    print(f"Funciona la lambda")
+    print(f"El archivo '{output_file}' se ha descargado con éxito.")
 
-    #local_file_path = "./spreadsheet_download_lambda/employees-raw-data.xlsx"
-    local_file_path = "./spreadsheet_download_lambda/hola.txt"
+    print(f"La función lambda funciona")
 
-    #s3_key = "employees-raw-data.xlsx"
-    s3_key = "hola.txt"
+    # Rutas a los archivos locales
+    # local_file_path = "./spreadsheet_download_lambda/employees-raw-data.xlsx"
+    # local_file_path = "./spreadsheet_download_lambda/hola.txt"
+    # local_file_path = "./employees-raw-data.xlsx"
 
-    s3_client = boto3.client('s3')
+    # Clave S3 para el archivo
+    # s3_key = "employees-raw-data.xlsx"
+    # s3_key = "hola.txt"
 
-    try:
-        s3_client.upload_file(local_file_path, 'staff-assessment-bucket', s3_key)
-        return(print("Archivo subido con éxito a S3"))
-    except Exception as e:
-        return(print(f"Error al subir el archivo a S3: {str(e)}"))
-    
+    # s3_client = boto3.client('s3')
+
+    # try:
+    #     s3_client.upload_file(local_file_path, 'staff-assessment-bucket', s3_key)
+    #     return(print("El archivo se ha subido exitosamente a S3"))
+    # except Exception as e:
+    #     return(print(f"Error al subir el archivo a S3: {str(e)}"))
+
 def get_secret(secret_name):
-
-    # Create a Secrets Manager client
+    # Crea un cliente de Secrets Manager
     session = boto3.session.Session()
     client = session.client(
         service_name='secretsmanager',
         region_name="us-east-1"
     )
 
-    #Get the value of the secret
+    # Obtiene el valor del secreto
     get_secret_value_response = client.get_secret_value(
         SecretId=secret_name
     )
@@ -83,8 +87,6 @@ def get_secret(secret_name):
 
     return secret
 
-def extract_json_value(json,dato):
-
-    data = json.loads(json)
-
+def extract_json_value(var_json, dato):
+    data = json.loads(var_json)
     return data[dato]
