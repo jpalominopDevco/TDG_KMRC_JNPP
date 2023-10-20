@@ -24,18 +24,20 @@ def run(event, context):
     request = drive_service.files().export_media(fileId=file_id, mimeType='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet')
     
     # Nombre del archivo de destino para guardar la hoja de cálculo
-    output_file = 'employees-raw-data.xlsx'
+    output_file = '/tmp/employees-raw-data.xlsx'
 
     # Ruta completa para guardar el archivo en el sistema de archivos local
-    script_directory = os.path.dirname(os.path.abspath(__file__))
-    output_file_path = os.path.join(script_directory, output_file)
+    # script_directory = os.path.dirname(os.path.abspath(__file__))
+    # output_file_path = os.path.join(script_directory, output_file)
 
     # Guarda el archivo en el sistema de archivos local
-    with open(output_file_path, 'wb') as file:
+    # with open(output_file_path, 'wb') as file:
+    #     file.write(request.execute())
+    with open(output_file, 'wb') as file:
         file.write(request.execute())
 
     # Rutas a los archivos locales
-    local_file_path = "./spreadsheet_download_lambda/employees-raw-data.xlsx"
+    # local_file_path = "employees-raw-data.xlsx"
 
     # Clave S3 para el archivo
     s3_key = "employees-raw-data.xlsx"
@@ -43,11 +45,11 @@ def run(event, context):
     s3_client = boto3.client('s3')
 
     try:
-        s3_client.upload_file(local_file_path, 'staff-assessment-bucket', s3_key)
-        os.remove(local_file_path)
+        s3_client.upload_file(output_file, 'staff-assessment-bucket', s3_key)
+        # os.remove(local_file_path)
         return(print("El archivo se ha subido exitosamente a S3"))
     except Exception as e:
-        os.remove(local_file_path)
+        # os.remove(local_file_path)
         return(print(f"Error al subir el archivo a S3: {str(e)}"))
 
 def get_secret(secret_name):

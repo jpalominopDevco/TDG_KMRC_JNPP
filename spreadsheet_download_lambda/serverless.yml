@@ -17,14 +17,13 @@ functions:
   downloadSpreadsheetFile:
     name: ${sls:stage}-downloadSpreadsheetFile
     handler: download_spreadsheet_file.run
+    layers:
+      - Ref: PythonRequirementsLambdaLayer
     events:
       - schedule: cron(0/2 * ? * MON-FRI *)
-    layers:
-      - Ref: downloadSpreadsheetFileDependencies
 
 custom:
   pythonRequirements:
-    layer: 
-      name: downloadSpreadsheetFileDependencies
-      compatibleRuntimes:
-        - python3.10
+    fileName: requirements.txt
+    layer: true
+      
