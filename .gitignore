@@ -38,7 +38,7 @@ logs/
 .sls-debug.log
 
 # Sensitive configuration files (e.g., credentials)
-serverless.yml
+
 .env
 .env.local
 .env.*.local
