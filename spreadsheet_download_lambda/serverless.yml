@@ -1,4 +1,4 @@
-service: staff-assesment-service
+service: staff-assesment-download-spreadsheet-service
 
 frameworkVersion: "3"
 

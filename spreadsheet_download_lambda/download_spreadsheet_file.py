@@ -69,4 +69,4 @@ def extract_secret_value(secret_name, key):
 
 def upload_to_s3(local_path, bucket_name, s3_key):
     s3_client = boto3.client('s3')
-    s3_client.upload_file(local_path, bucket_name, s3_key)
+    s3_client.upload_file(local_path, bucket_name, 'raw_data/' + s3_key)
