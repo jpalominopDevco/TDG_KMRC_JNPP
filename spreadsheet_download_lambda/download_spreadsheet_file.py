@@ -3,6 +3,11 @@ import boto3
 import json
 from google.oauth2 import service_account
 from googleapiclient.discovery import build
+import logging
+
+logger = logging.getLogger()
+logger.setLevel(logging.INFO)
+
 
 # Constantes
 SECRET_DRIVE_NAME = "StaffAssessmentSMDrive"
@@ -41,9 +46,9 @@ def run(event, context):
         # Elimina el archivo local
         os.remove(output_file)
 
-        return "El archivo se ha subido exitosamente a S3"
+        return logger.info("El archivo se ha subido exitosamente a S3")
     except Exception as e:
-        return f"Error al subir el archivo a S3: {str(e)}"
+        return logger.info(f"Error al subir el archivo a S3: {str(e)}")
 
 def get_secret(secret_name):
     # Crea un cliente de Secrets Manager
