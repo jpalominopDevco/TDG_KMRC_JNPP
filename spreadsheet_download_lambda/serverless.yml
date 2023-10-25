@@ -1,0 +1,30 @@
+service: staff-assesment-download-spreadsheet-service
+
+frameworkVersion: "3"
+
+provider:
+  name: aws
+  runtime: python3.10
+  region: us-east-1
+  stage: dev
+  iam:
+    role: arn:aws:iam::306192109948:role/StaffAssessmentLambdaExecutionRole
+
+plugins:
+  - serverless-python-requirements
+
+functions:
+  downloadSpreadsheetFile:
+    name: ${sls:stage}-downloadSpreadsheetFile
+    handler: download_spreadsheet_file.run
+    layers:
+      - Ref: PythonRequirementsLambdaLayer
+    events:
+      # - schedule: cron(0/2 * ? * MON-FRI *)
+       - schedule: cron(0/2 * ? * * *)
+
+custom:
+  pythonRequirements:
+    fileName: requirements.txt
+    layer: true
+      

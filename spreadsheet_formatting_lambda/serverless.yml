@@ -1,0 +1,35 @@
+service: staff-assesment-spreadsheet-formatting-service
+
+frameworkVersion: "3"
+
+provider:
+  name: aws
+  runtime: python3.10
+  region: us-east-1
+  stage: dev
+  iam:
+    role: arn:aws:iam::306192109948:role/StaffAssessmentLambdaExecutionRole
+
+plugins:
+  - serverless-python-requirements
+
+functions:
+  spreadsheetFormatting:
+    name: ${sls:stage}-spreadsheetFormatting
+    handler: spreadsheet_formatting.run
+    layers:
+      - Ref: PythonRequirementsLambdaLayer
+    events:
+      - s3:
+          bucket: staff-assessment-bucket
+          event: s3:ObjectCreated:*
+          rules:
+            - prefix: raw_data/
+            - suffix: .xlsx
+          existing: true
+
+custom:
+  pythonRequirements:
+    fileName: requirements.txt
+    layer: true
+      
