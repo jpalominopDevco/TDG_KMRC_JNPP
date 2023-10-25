@@ -19,12 +19,13 @@ MIME_TYPE = 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
 def run(event, context):
     try:
         # Obtiene el valor del identificador del archivo de Google Drive desde Secrets Manager
-        file_id = extract_secret_value(SECRET_DRIVE_NAME, "file_id")
+        secret_value = get_secret(SECRET_DRIVE_NAME)
+        file_id = extract_secret_value(secret_value, "file_id")
 
         # Obtiene las credenciales de la cuenta de servicio desde Secrets Manager
         secret_credentials = json.loads(get_secret(SECRET_CREDENTIALS_NAME))
 
-        # Autenticación utilizando las credenciales de la cuenta de servicio
+        # Genera un objeto con la autenticación utilizando las credenciales de la cuenta de servicio
         credentials = service_account.Credentials.from_service_account_info(
             secret_credentials, scopes=['https://www.googleapis.com/auth/drive.readonly']
         )
@@ -67,8 +68,7 @@ def get_secret(secret_name):
 
     return secret
 
-def extract_secret_value(secret_name, key):
-    secret_value = get_secret(secret_name)
+def extract_secret_value(secret_value, key):
     data = json.loads(secret_value)
     return data.get(key, None)
 
