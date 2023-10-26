@@ -1,26 +1,52 @@
 import boto3
 import pandas as pd
+import json
+import csv
 
-# Configura la región y el nombre de la tabla
-region = 'us-east-1'
-table_name = 'Employee'
+def get_dynamodb_data(region, table_name):
+    dynamodb = boto3.client('dynamodb', region_name=region)
+    response = dynamodb.scan(TableName=table_name)
+    items = response.get('Items', [])
+    return items
 
-# Inicializa el cliente de DynamoDB
-dynamodb = boto3.client('dynamodb', region_name=region)
+def transform_data(items):
+    for item in items:
+        for key, value in item.items():
+            if 'S' in value:
+                item[key] = value['S']
+    print(items)
+    return items
 
-# Escanea la tabla DynamoDB
-response = dynamodb.scan(TableName=table_name)
+def format_empty(value):
+    return '" "' if value.strip() == '' else value
 
-# Obtiene los elementos escaneados
-items = response.get('Items', [])
+def process_data(data):
+    df = pd.DataFrame(data)
+    df = df.map(format_empty)
+    column_order = [
+        "ssn",
+        "dateOfHire",
+        "disengagementDate",
+        "disengagementReason",
+        "documentType",
+        "email",
+        "name",
+        "occupation",
+        "salary"
+    ]
+    df = df[column_order]
+    return df
 
-# Convierte los datos en un DataFrame de pandas
-df = pd.DataFrame(items)
+def export_to_csv(df, csv_file):
+    df.to_csv(csv_file, index=False, quoting=csv.QUOTE_ALL)
+    print(f'Datos exportados a {csv_file}')
 
-# Nombre del archivo CSV de salida
-csv_file = 'employees-dynamodb-data.csv'
+if __name__ == "__main__":
+    region = 'us-east-1'
+    table_name = 'Employee'
+    csv_file = 'employees-dynamodb-data.csv'
 
-# Exporta el DataFrame a un archivo CSV
-df.to_csv(csv_file, index=False)
-
-print(f'Datos exportados a {csv_file}')
+    items = get_dynamodb_data(region, table_name)
+    data = transform_data(items)
+    df = process_data(data)
+    export_to_csv(df, csv_file)
