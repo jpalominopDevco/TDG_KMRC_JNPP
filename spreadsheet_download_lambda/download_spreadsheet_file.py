@@ -35,6 +35,8 @@ def run(event, context):
 
         # Descarga el archivo de Google Drive
         request = drive_service.files().export_media(fileId=file_id, mimeType=MIME_TYPE)
+
+        # Ruta del archivo en la lambda
         output_file = '/tmp/' + OUTPUT_FILE_NAME
 
         # Guarda el archivo en el sistema de archivos local
