@@ -2,6 +2,33 @@
 import boto3
 import pandas as pd
 import csv
+import logging
+
+logger = logging.getLogger()
+logger.setLevel(logging.INFO)
+
+# Define la región y el nombre de la tabla DynamoDB
+REGION = 'us-east-1'
+TABLE_NAME = 'Employee'
+# Define el nombre del archivo CSV de salida
+OUTPUT_FILE_NAME = 'employees-dynamodb-data.csv'
+S3_BUCKET_NAME = "staff-assessment-bucket"
+
+def run(event, context):
+    
+    # Obtiene los datos de DynamoDB
+    items = get_dynamodb_data(REGION, TABLE_NAME)
+    # Transforma los datos
+    data = transform_data(items)
+    # Procesa los datos y crea un DataFrame
+    df = process_data(data)
+    # Ruta del archivo en la lambda
+    output_file = '/tmp/' + OUTPUT_FILE_NAME
+    # Exporta el DataFrame a un archivo CSV
+    export_to_csv(df,output_file)
+    # Sube el archivo a S3
+    upload_to_s3(output_file, S3_BUCKET_NAME, OUTPUT_FILE_NAME)
+    logger.info("El archivo se ha subido exitosamente a S3")
 
 # Función para obtener datos de DynamoDB
 def get_dynamodb_data(region, table_name):
@@ -50,25 +77,11 @@ def process_data(data):
     return df
 
 # Función para exportar el DataFrame a un archivo CSV
-def export_to_csv(df, csv_file):
+def export_to_csv(df,output_file):
     # Exporta el DataFrame a un archivo CSV sin índice y con todas las celdas rodeadas de comillas
-    df.to_csv(csv_file, index=False, quoting=csv.QUOTE_ALL)
+    df.to_csv(output_file, index=False, quoting=csv.QUOTE_ALL)
     # Imprime un mensaje de confirmación
-    print(f'Datos exportados a {csv_file}')
 
-# Punto de entrada principal del programa
-if __name__ == "__main__":
-    # Define la región y el nombre de la tabla DynamoDB
-    region = 'us-east-1'
-    table_name = 'Employee'
-    # Define el nombre del archivo CSV de salida
-    csv_file = 'employees-dynamodb-data.csv'
-
-    # Obtiene los datos de DynamoDB
-    items = get_dynamodb_data(region, table_name)
-    # Transforma los datos
-    data = transform_data(items)
-    # Procesa los datos y crea un DataFrame
-    df = process_data(data)
-    # Exporta el DataFrame a un archivo CSV
-    export_to_csv(df, csv_file)
+def upload_to_s3(local_path, bucket_name, s3_key):
+    s3_client = boto3.client('s3')
+    s3_client.upload_file(local_path, bucket_name, 'dynamodb_data/' + s3_key)
