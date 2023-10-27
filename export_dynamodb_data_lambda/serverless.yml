@@ -6,7 +6,7 @@ provider:
   name: aws
   runtime: python3.10
   region: us-east-1
-  stage: dev
+  stage: qa
   iam:
     role: arn:aws:iam::306192109948:role/StaffAssessmentLambdaExecutionRole
 
