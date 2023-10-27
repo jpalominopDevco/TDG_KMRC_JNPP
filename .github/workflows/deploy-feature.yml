@@ -1,0 +1,84 @@
+name: CI/CD for export_dynamodb_data_lambda
+
+on:
+  push:
+    branches:
+      - feature/*
+  workflow_dispatch:
+
+jobs:
+  continuousintegration:
+    runs-on: ubuntu-20.04
+
+    steps:
+    - name: test
+      run: pwd
+      
+    - name: test2
+      run: ls -a
+    # - name: Checkout code
+    #   uses: actions/checkout@v4
+
+    # - name: Set up Python
+    #   uses: actions/setup-python@v4
+    #   with:
+    #     python-version: '3.10'
+
+    # - name: Install dependencies
+    #   run: pip install -r export_dynamodb_data_lambda/requirements.txt
+
+    # - name: Run unit tests
+    #   run: pytest
+
+    # - name: Generate code coverage report
+    #   run: |
+    #     pip install coverage
+    #     coverage run -m pytest
+    #     coverage xml
+
+    # - name: Upload code coverage to Codecov (opcional)
+    #   uses: codecov/codecov-action@v2
+    #   with:
+    #     token: ${{ secrets.CODECOV_TOKEN }}
+
+    # - name: Analyze with SonarCloud
+    #   uses: sonarsource/sonarcloud-github-action@v1
+    #   with:
+    #     projectBaseDir: ./ # Ruta a tu proyecto
+    #   env:
+    #     GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+    #     SONAR_TOKEN: ${{ secrets.SONARCLOUD_TOKEN }} 
+
+    # - name: Check Quality Gate status
+    #   run: |
+    #     quality_gate_status=$(curl -s "https://sonarcloud.io/api/qualitygates/project_status?projectKey=your_project_key" -u ${{ secrets.SONARCLOUD_TOKEN }}:)
+
+    #     if [[ $quality_gate_status == *"ERROR"* ]]; then
+    #       echo "Quality Gate check failed."
+    #       exit 1
+    #     else
+    #       echo "Quality Gate check passed."
+    #     fi
+  # continuousdeployment:
+  #   runs-on: ubuntu-latest
+
+  #   steps:
+  #   - name: Checkout code
+  #     uses: actions/checkout@v4
+
+  #   - name: Install Node.js
+  #     uses: actions/setup-node@v3
+  #     with:
+  #       node-version: 18
+    
+  #   - name: Install Serverless Framework
+  #     run: npm install -g serverless
+
+  #   - 
+
+  #   - name: Deploy to AWS
+  #     run: serverless deploy
+  #     env:
+  #       AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+  #       AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+  #       AWS_SESSION_TOKEN: ${{ secrets.AWS_SESSION_TOKEN }}
