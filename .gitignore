@@ -88,3 +88,4 @@ pip-wheel-metadata/
 *.xlsb
 
 *.json
+*.csv
