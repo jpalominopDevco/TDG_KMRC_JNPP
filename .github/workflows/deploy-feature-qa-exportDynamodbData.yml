@@ -7,7 +7,7 @@ on:
   workflow_dispatch:
 
 jobs:
-  Continuous Integration:
+  continuous_integration:
     runs-on: ubuntu-20.04
 
     steps:
@@ -54,7 +54,7 @@ jobs:
     #     else
     #       echo "Quality Gate check passed."
     #     fi
-  Continuous Deployment:
+  continuous_deployment:
     needs: continuousintegration
     runs-on: ubuntu-latest
 
