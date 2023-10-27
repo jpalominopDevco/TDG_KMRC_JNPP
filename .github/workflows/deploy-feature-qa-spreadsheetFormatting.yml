@@ -3,7 +3,7 @@ name: CI/CD for qa-spreadsheetFormatting
 on:
   push:
     branches:
-      - feature/*
+      - feature/spreadsheet-formatting-lambda
   workflow_dispatch:
 
 jobs:
