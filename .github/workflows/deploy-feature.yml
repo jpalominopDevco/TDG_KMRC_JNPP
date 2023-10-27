@@ -55,19 +55,22 @@ jobs:
     #       echo "Quality Gate check passed."
     #     fi
   continuousdeployment:
+    needs: continuousintegration
     runs-on: ubuntu-latest
 
     steps:
     - name: Install Node.js
-      uses: actions/setup-node@v2
+      uses: actions/setup-node@v3
       with:
-        node-version: 14
+        node-version: 18
     
     - name: Install Serverless Framework
       run: npm install -g serverless
 
     - name: Deploy to AWS
-      run: | 
+      run: |
+        pwd
+        ls -a
         cd export_dynamodb_data_lambda
         pwd
         ls -a
