@@ -55,7 +55,7 @@ jobs:
     #       echo "Quality Gate check passed."
     #     fi
   continuous_deployment:
-    needs: continuousintegration
+    needs: continuous_integration
     runs-on: ubuntu-latest
 
     steps:
