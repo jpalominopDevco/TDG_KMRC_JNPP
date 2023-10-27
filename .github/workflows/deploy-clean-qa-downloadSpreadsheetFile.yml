@@ -1,0 +1,37 @@
+name: Remove for qa-downloadSpreadsheetFile
+
+on:
+  #push:
+  #  branches:
+  #    - main
+  workflow_dispatch:
+
+jobs:
+  remove_qa_enviroment:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Install Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: 18
+
+      - name: Install Serverless Framework
+        run: npm install -g serverless
+
+      - name: Install plugin serverless-python-requirements
+        run: |
+          cd spreadsheet_download_lambda
+          sls plugin install -n serverless-python-requirements
+
+      - name: Remove from AWS
+        run: |
+          cd spreadsheet_download_lambda
+          serverless remove
+        env:
+          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          AWS_SESSION_TOKEN: ${{ secrets.AWS_SESSION_TOKEN }}
