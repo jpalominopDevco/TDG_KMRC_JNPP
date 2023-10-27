@@ -3,7 +3,7 @@ name: CI/CD for qa-exportDynamodbData
 on:
   push:
     branches:
-      - feature/*
+      - feature/export-dynamodb-data-lambda
   workflow_dispatch:
 
 jobs:
