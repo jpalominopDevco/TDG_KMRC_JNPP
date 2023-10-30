@@ -27,6 +27,15 @@ jobs:
           cd spreadsheet_formatting_lambda
           sls plugin install -n serverless-python-requirements
 
+      - name: Replace Tokens
+        uses: cschleiden/replace-tokens@v1
+        with:
+          tokenPrefix: '{'
+          tokenSuffix: '}' 
+          files: '["**/*.yml"]'
+        env:
+          ENVIRONMENT: qa    
+      
       - name: Remove from AWS
         run: |
           cd spreadsheet_formatting_lambda
