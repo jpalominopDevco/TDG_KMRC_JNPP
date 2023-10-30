@@ -80,7 +80,7 @@ jobs:
       with:
         tokenPrefix: '{'
         tokenSuffix: '}' 
-        files: '["**/*.yml"]'
+        files: '["spreadsheet_download_lambda/serverless.yml"]'
       env:
         ENVIRONMENT: qa
 
