@@ -15,30 +15,37 @@ OUTPUT_FILE_NAME = 'employees-dynamodb-data.csv'
 S3_BUCKET_NAME = "staff-assessment-bucket"
 
 def run(event, context):
-    
-    # Obtiene los datos de DynamoDB
-    items = get_dynamodb_data(REGION, TABLE_NAME)
-    # Transforma los datos
-    data = transform_data(items)
-    # Procesa los datos y crea un DataFrame
-    df = process_data(data)
-    # Ruta del archivo en la lambda
-    output_file = '/tmp/' + OUTPUT_FILE_NAME
-    # Exporta el DataFrame a un archivo CSV
-    export_to_csv(df,output_file)
-    # Sube el archivo a S3
-    upload_to_s3(output_file, S3_BUCKET_NAME, OUTPUT_FILE_NAME)
-    logger.info("El archivo se ha subido exitosamente a S3")
+    try:
+        # Obtiene los datos de DynamoDB
+        items = get_dynamodb_data(REGION, TABLE_NAME)
+        # Transforma los datos
+        data = transform_data(items)
+        # Procesa los datos y crea un DataFrame
+        df = process_data(data)
+        # Ruta del archivo en la lambda
+        output_file = '/tmp/' + OUTPUT_FILE_NAME
+        # Exporta el DataFrame a un archivo CSV
+        export_to_csv(df,output_file)
+        # Sube el archivo a S3
+        upload_to_s3(output_file, S3_BUCKET_NAME, OUTPUT_FILE_NAME)
+        logger.info("Ejecución exitosa")
+    except Exception as e:
+        logger.error(f"Error en la ejecución: {str(e)}")
 
 # Función para obtener datos de DynamoDB
 def get_dynamodb_data(region, table_name):
-    # Inicializa el cliente de DynamoDB en la región especificada
-    dynamodb = boto3.client('dynamodb', region_name=region)
-    # Escanea la tabla DynamoDB y obtiene la respuesta
-    response = dynamodb.scan(TableName=table_name)
-    # Extrae los elementos escaneados de la respuesta
-    items = response.get('Items', [])
-    return items
+    try:
+        # Inicializa el cliente de DynamoDB en la región especificada
+        dynamodb = boto3.client('dynamodb', region_name=region)
+        # Escanea la tabla DynamoDB y obtiene la respuesta
+        response = dynamodb.scan(TableName=table_name)
+        # Extrae los elementos escaneados de la respuesta
+        items = response.get('Items', [])
+        logger.info("Datos de DynamoDB obtenidos exitosamente")
+        return items
+    except Exception as e:
+        logger.error(f"Error al obtener datos de DynamoDB: {str(e)}")
+        return []
 
 # Función para transformar los datos
 def transform_data(items):
@@ -78,10 +85,18 @@ def process_data(data):
 
 # Función para exportar el DataFrame a un archivo CSV
 def export_to_csv(df,output_file):
-    # Exporta el DataFrame a un archivo CSV sin índice y con todas las celdas rodeadas de comillas
-    df.to_csv(output_file, index=False, quoting=csv.QUOTE_ALL)
-    # Imprime un mensaje de confirmación
+    try:
+        # Exporta el DataFrame a un archivo CSV sin índice y con todas las celdas rodeadas de comillas
+        df.to_csv(output_file, index=False, quoting=csv.QUOTE_ALL)
+    except Exception as e:
+        logger.error(f"Error al exportar a CSV: {str(e)}")
 
 def upload_to_s3(local_path, bucket_name, s3_key):
-    s3_client = boto3.client('s3')
-    s3_client.upload_file(local_path, bucket_name, 'dynamodb_data/' + s3_key)
+    try:
+        # Crea un cliente de S3
+        s3_client = boto3.client('s3')
+        # Sube el archivo
+        s3_client.upload_file(local_path, bucket_name, 'dynamodb_data/' + s3_key)
+        logger.info("El archivo se ha subido exitosamente a S3")
+    except Exception as e:
+        logger.error(f"Error al cargar archivo a S3: {str(e)}")

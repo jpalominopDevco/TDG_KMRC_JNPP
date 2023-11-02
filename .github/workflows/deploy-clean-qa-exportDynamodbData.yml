@@ -27,6 +27,15 @@ jobs:
           cd export_dynamodb_data_lambda
           sls plugin install -n serverless-python-requirements
 
+      - name: Replace Tokens
+        uses: cschleiden/replace-tokens@v1
+        with:
+          tokenPrefix: '{'
+          tokenSuffix: '}' 
+          files: '["export_dynamodb_data_lambda/serverless.yml"]'
+        env:
+          ENVIRONMENT: qa
+
       - name: Remove from AWS
         run: |
           cd export_dynamodb_data_lambda
