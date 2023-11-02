@@ -26,86 +26,98 @@ COLUMN_HEADERS = [
     'Promedio'
 ]
 def run(event, context):
-    # Obtiene el archivo de S3
-    file_s3 = get_file_s3()
+    try:
+        # Obtiene el archivo de S3
+        file_s3 = get_file_s3()
 
-    # Ruta del archivo en la lambda
-    output_file = '/tmp/' + OUTPUT_FILE_NAME
+        # Ruta del archivo en la lambda
+        output_file = '/tmp/' + OUTPUT_FILE_NAME
 
-    # Guarda el archivo en el sistema de archivos local
-    with open(output_file, 'wb') as file:
-        file.write(file_s3)
+        # Guarda el archivo en el sistema de archivos local
+        with open(output_file, 'wb') as file:
+            file.write(file_s3)
 
-    # Abre el archivo de Excel
-    workbook = load_workbook(output_file)
+        # Abre el archivo de Excel
+        workbook = load_workbook(output_file)
 
-    # Elimina la hoja Datos en el archivo de Excel
-    if 'Datos' in workbook.sheetnames:
-        workbook.remove(workbook['Datos'])
+        # Elimina la hoja Datos en el archivo de Excel
+        if 'Datos' in workbook.sheetnames:
+            workbook.remove(workbook['Datos'])
 
-    # Selecciona la hoja Detalle como hoja de trabajo
-    worksheet = workbook['Detalle']
+        # Selecciona la hoja Detalle como hoja de trabajo
+        worksheet = workbook['Detalle']
 
-    # Se modifican los headers en las columnas
-    modify_column_headers(worksheet)
+        # Se modifican los headers en las columnas
+        modify_column_headers(worksheet)
 
-    # Se recorren las filas menos los headers
-    current_row = 2
-    for row in worksheet.iter_rows(min_row=2, min_col=1, max_col=13):
-        cell_c = row[2]
-        cell_d = row[3]
-        cell_m = row[12]
+        # Se recorren las filas menos los headers
+        current_row = 2
+        for row in worksheet.iter_rows(min_row=2, min_col=1, max_col=13):
+            cell_c = row[2]
+            cell_d = row[3]
+            cell_m = row[12]
 
-        if cell_c.value is not None:
+            if cell_c.value is not None:
 
-            # Se recortan los espacios en blanco al inicio y al final del correo
-            cell_c_coordinate = cell_c.coordinate
-            if cell_c_coordinate != 'C1':
-                worksheet[cell_c_coordinate] = cell_c.value.strip()
+                # Se recortan los espacios en blanco al inicio y al final del correo
+                cell_c_coordinate = cell_c.coordinate
+                if cell_c_coordinate != 'C1':
+                    worksheet[cell_c_coordinate] = cell_c.value.strip()
 
-            # Se genera el promedio de cada empleado por sesión de seguimiento
-            cell_m_coordinate = cell_m.coordinate
-            if cell_m_coordinate != 'M1':
-                worksheet[cell_m_coordinate] = f"=AVERAGE(E{current_row}:K{current_row})"
-                current_row += 1
-        else:
-            break
+                # Se genera el promedio de cada empleado por sesión de seguimiento
+                cell_m_coordinate = cell_m.coordinate
+                if cell_m_coordinate != 'M1':
+                    worksheet[cell_m_coordinate] = f"=AVERAGE(E{current_row}:K{current_row})"
+                    current_row += 1
+            else:
+                break
 
-        # Se agrega el formato especificado en la columna de fechas
-        if cell_d.value is not None:
-            cell_d_coordinate = cell_d.coordinate
-            if cell_d_coordinate != 'D1':
-                worksheet[cell_d_coordinate].number_format = 'mm/dd/yyyy'
+            # Se agrega el formato especificado en la columna de fechas
+            if cell_d.value is not None:
+                cell_d_coordinate = cell_d.coordinate
+                if cell_d_coordinate != 'D1':
+                    worksheet[cell_d_coordinate].number_format = 'mm/dd/yyyy'
 
-    # Se salvan los cambios y cierra el archivo
-    workbook.save(output_file)
-    workbook.close()
+        # Se salvan los cambios y cierra el archivo
+        workbook.save(output_file)
+        workbook.close()
 
-    # Sube el archivo a S3
-    upload_to_s3(output_file, S3_BUCKET_NAME, OUTPUT_FILE_NAME)
+        # Sube el archivo a S3
+        upload_to_s3(output_file, S3_BUCKET_NAME, OUTPUT_FILE_NAME)
 
-    # Elimina el archivo local
-    os.remove(output_file)
+        # Elimina el archivo local
+        os.remove(output_file)
+        
+        logger.info("Ejecución exitosa")
+    except Exception as e:
+        logger.error(f"Error en la ejecución: {str(e)}")
 
 def get_file_s3():
-    
-    s3 = boto3.client('s3')
-
-    # Obtiene el archivo desde S3
-    response = s3.get_object(Bucket=S3_BUCKET_NAME, Key=S3_FILE_NAME)
-
-    # Lee el contenido del archivo
-    file_content = response['Body'].read()
-
-    logger.info('Archivo descargado')
-
-    return file_content
-
-def upload_to_s3(local_path, bucket_name, s3_key):
-    s3_client = boto3.client('s3')
-    s3_client.upload_file(local_path, bucket_name, 'formatted_data/' + s3_key)
+    try: 
+        # Crea cliente de S3 
+        s3 = boto3.client('s3')
+        # Obtiene el archivo desde S3
+        response = s3.get_object(Bucket=S3_BUCKET_NAME, Key=S3_FILE_NAME)
+        # Lee el contenido del archivo
+        file_content = response['Body'].read()
+        logger.info('Archivo descargado')
+        return file_content
+    except Exception as e:
+        logger.error(f"Error inesperado al obtener el archivo desde S3: {str(e)}")
+        return None
 
 def modify_column_headers(worksheet):
     # Se recorren las columnas y se modifica el header
     for column, header in zip(worksheet.iter_cols(min_row=1, max_row=1, max_col=len(COLUMN_HEADERS)), COLUMN_HEADERS):
         column[0].value = header
+
+def upload_to_s3(local_path, bucket_name, s3_key):
+    try:
+        # Crea un cliente de S3
+        s3_client = boto3.client('s3')
+        # Sube el archivo
+        s3_client.upload_file(local_path, bucket_name, 'formatted_data/' + s3_key)
+        logger.info("El archivo se ha subido exitosamente a S3")
+    except Exception as e:
+        logger.error(f"Error al cargar archivo a S3: {str(e)}")
+    
