@@ -75,6 +75,15 @@ jobs:
         cd spreadsheet_download_lambda
         sls plugin install -n serverless-python-requirements
 
+    - name: Replace Tokens
+      uses: cschleiden/replace-tokens@v1
+      with:
+        tokenPrefix: '{'
+        tokenSuffix: '}' 
+        files: '["spreadsheet_download_lambda/serverless.yml"]'
+      env:
+        ENVIRONMENT: qa
+
     - name: Deploy to AWS
       run: |
         cd spreadsheet_download_lambda
